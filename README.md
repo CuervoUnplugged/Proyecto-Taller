@@ -1,4 +1,4 @@
-# Proyecto Parcial
+# Proyecto Taller
 
 ## Juan Manuel Cuervo Gaitan
 ## Samuel Marin Vanegas
