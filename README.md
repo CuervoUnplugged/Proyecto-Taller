@@ -10,7 +10,7 @@
 
 Nuestro proyecto de **Damas Chinas** busca mejorar la experiencia del jugador mediante una **jugabilidad más intuitiva e interactiva**, reemplazando el tradicional ingreso de coordenadas con letras y números por un sistema de **movimiento mediante teclas y la tecla Enter**.
 
-Además, se añadió una función visual que **indica cuándo una ficha está disponible para ser comida**, mostrando símbolos como *y* o *a* sobre el tablero.  
+Además, se añadió una función visual que **indica cuándo una ficha está disponible para ser comida**, mostrando símbolos como (**y**) o (**a**) sobre el tablero.  
 Esto permite al jugador **identificar rápidamente las jugadas posibles** y planificar su estrategia sin confusiones.
 
 ---
