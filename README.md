@@ -1,4 +1,4 @@
-# Proyecto: Damas Chinas Interactivas
+# Proyecto: Damas Chinas 
 
 ## Integrantes
 - **Juan Manuel Cuervo**  
