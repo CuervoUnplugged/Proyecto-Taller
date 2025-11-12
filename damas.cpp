@@ -185,3 +185,78 @@ bool makeMove(int fromRow, int fromCol, int toRow, int toCol, char player, bool&
 
     return false;
 }
+
+bool isGameOver(char& winner) {
+    int y = 0, a = 0;
+    for (int i = 0; i < SIZE; ++i)
+        for (int j = 0; j < SIZE; ++j) {
+            if (board[i][j] == 'y' || board[i][j] == 'Y') y++;
+            if (board[i][j] == 'a' || board[i][j] == 'A') a++;
+        }
+    if (y == 0) { winner = 'a'; return true; }
+    if (a == 0) { winner = 'y'; return true; }
+    return false;
+}
+
+void jugarDamas() {
+    initBoard();
+    char player = 'y';
+    char winner;
+
+    while (true) {
+        printBoard();
+        std::cout << "\nTurno de " << player << "\n";
+        std::cout << "Introduce movimiento (ejemplo: A3 B4): ";
+
+        std::string from, to;
+        std::cin >> from >> to;
+        if (!std::cin || from.size() < 2 || to.size() < 2) break;
+
+        int fromCol = letterToColumn(from[0]);
+        int fromRow = from[1] - '0';
+        int toCol = letterToColumn(to[0]);
+        int toRow = to[1] - '0';
+
+        if (fromCol == -1 || toCol == -1) continue;
+
+        bool captured = false;
+        if (!makeMove(fromRow, fromCol, toRow, toCol, player, captured)) {
+            std::cout << "Movimiento inválido.\n";
+            _getch();
+            continue;
+        }
+
+        if (captured) {
+            bool cadena = true;
+            while (cadena) {
+                printBoard();
+                if (!canCaptureFrom(toRow, toCol, player)) break;
+
+                std::cout << "\nCaptura adicional disponible. Mismo turno de " << player << ".\n";
+                std::cout << "Siguiente destino (ejemplo: C5): ";
+                std::string next;
+                std::cin >> next;
+                if (next.size() < 2) break;
+                int nCol = letterToColumn(next[0]);
+                int nRow = next[1] - '0';
+                bool chainCaptured = false;
+                if (!makeMove(toRow, toCol, nRow, nCol, player, chainCaptured) || !chainCaptured) {
+                    std::cout << "Movimiento inválido.\n";
+                    _getch();
+                    break;
+                }
+                toRow = nRow;
+                toCol = nCol;
+            }
+        }
+
+        if (isGameOver(winner)) {
+            printBoard();
+            std::cout << "\nJuego terminado. Gana " << winner << ".\n";
+            _getch();
+            break;
+        }
+
+        player = (player == 'y') ? 'a' : 'y';
+    }
+}
