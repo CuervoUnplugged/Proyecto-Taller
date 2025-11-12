@@ -6,13 +6,6 @@
 
 ---
 
-### Como ejecutar el codigo
-cd "C:\Users\Samuel\Desktop\Codes Cuervo\DamiselasChinas"
-g++ menu.cpp damas.cpp clear_window.cpp -o damas
-.\damas.exe
-
----
-
 ## Innovación en la Jugabilidad
 
 Nuestro proyecto de **Damas Chinas** busca mejorar la experiencia del jugador mediante una **jugabilidad más intuitiva e interactiva**, reemplazando el tradicional ingreso de coordenadas con letras y números por un sistema de **movimiento mediante teclas y la tecla Enter**.
