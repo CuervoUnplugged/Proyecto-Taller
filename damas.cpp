@@ -93,3 +93,95 @@ bool canCaptureFrom(int r, int c, char player) {
     }
     return false;
 }
+
+bool playerHasCapture(char player) {
+    for (int i = 0; i < SIZE; ++i)
+        for (int j = 0; j < SIZE; ++j)
+            if ((player == 'y' && (board[i][j] == 'y' || board[i][j] == 'Y')) ||
+                (player == 'a' && (board[i][j] == 'a' || board[i][j] == 'A')))
+                if (canCaptureFrom(i, j, player))
+                    return true;
+    return false;
+}
+
+bool makeMove(int fromRow, int fromCol, int toRow, int toCol, char player, bool& captured) {
+    char piece = board[fromRow][fromCol];
+    if (piece == '.' || piece == ' ') return false;
+    if (board[toRow][toCol] != '.') return false;
+
+    int dr = toRow - fromRow;
+    int dc = toCol - fromCol;
+    if (std::abs(dr) != std::abs(dc)) return false;
+
+    if (!playerHasCapture(player)) {
+        int dir = (player == 'y') ? -1 : 1;
+        if (!isKing(piece) && dr == dir && std::abs(dc) == 1) {
+            board[toRow][toCol] = piece;
+            board[fromRow][fromCol] = '.';
+            if (player == 'y' && toRow == 0) board[toRow][toCol] = 'Y';
+            if (player == 'a' && toRow == SIZE - 1) board[toRow][toCol] = 'A';
+            captured = false;
+            return true;
+        }
+        if (isKing(piece)) {
+            int stepR = (dr > 0) ? 1 : -1;
+            int stepC = (dc > 0) ? 1 : -1;
+            int r = fromRow + stepR, c = fromCol + stepC;
+            while (r != toRow && c != toCol) {
+                if (board[r][c] != '.') return false;
+                r += stepR; c += stepC;
+            }
+            board[toRow][toCol] = piece;
+            board[fromRow][fromCol] = '.';
+            captured = false;
+            return true;
+        }
+        return false;
+    }
+
+    if (isKing(piece)) {
+        int stepR = (dr > 0) ? 1 : -1;
+        int stepC = (dc > 0) ? 1 : -1;
+        int r = fromRow + stepR, c = fromCol + stepC;
+        bool foundEnemy = false;
+        int enemyR = -1, enemyC = -1;
+
+        while (r != toRow && c != toCol) {
+            if (board[r][c] == '.' || board[r][c] == ' ') {
+                r += stepR; c += stepC;
+                continue;
+            }
+            if (isOpponent(board[r][c], player) && !foundEnemy) {
+                foundEnemy = true;
+                enemyR = r; enemyC = c;
+                r += stepR; c += stepC;
+                continue;
+            }
+            return false;
+        }
+
+        if (foundEnemy && board[toRow][toCol] == '.') {
+            board[enemyR][enemyC] = '.';
+            board[toRow][toCol] = piece;
+            board[fromRow][fromCol] = '.';
+            captured = true;
+            return true;
+        }
+    } else {
+        if (std::abs(dr) == 2 && std::abs(dc) == 2) {
+            int midR = (fromRow + toRow) / 2;
+            int midC = (fromCol + toCol) / 2;
+            if (isOpponent(board[midR][midC], player)) {
+                board[midR][midC] = '.';
+                board[toRow][toCol] = piece;
+                board[fromRow][fromCol] = '.';
+                if (player == 'y' && toRow == 0) board[toRow][toCol] = 'Y';
+                if (player == 'a' && toRow == SIZE - 1) board[toRow][toCol] = 'A';
+                captured = true;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
